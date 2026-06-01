@@ -199,16 +199,82 @@ nav {
 }
 .academic-left h2 em { font-style: italic; }
 
-.grade-tags { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 3rem; }
+.grade-tags { display: flex; gap: 0.7rem; flex-wrap: wrap; margin-top: 3rem; }
 .grade-tag {
-  padding: 0.5rem 1.2rem;
-  border: 1px solid var(--border); border-radius: 100px;
-  font-size: 0.78rem; font-weight: 400;
-  letter-spacing: 0.05em; color: var(--muted);
-  background: transparent; transition: all 0.3s;
+  padding: 0.55rem 1.3rem;
+  border-radius: 100px;
+  font-size: 0.78rem; font-weight: 500;
+  letter-spacing: 0.06em;
+  color: rgba(26,26,20,0.75);
+  /* Glass base */
+  background: linear-gradient(135deg,
+    rgba(255,255,255,0.55) 0%,
+    rgba(255,255,255,0.18) 50%,
+    rgba(255,255,255,0.32) 100%
+  );
+  border: 1px solid rgba(255,255,255,0.75);
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.08),
+    0 1px 2px rgba(0,0,0,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.9),
+    inset 0 -1px 0 rgba(0,0,0,0.06);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s cubic-bezier(0.16,1,0.3,1),
+              box-shadow 0.25s cubic-bezier(0.16,1,0.3,1),
+              background 0.25s;
+  cursor: none;
 }
-.grade-tag:hover { background: var(--ink); color: var(--cream); border-color: var(--ink); }
-.grade-tag.star { background: var(--accent); color: var(--ink); border-color: var(--accent); font-weight: 500; }
+/* Glass shine streak */
+.grade-tag::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -60%;
+  width: 40%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.5s cubic-bezier(0.16,1,0.3,1);
+  pointer-events: none;
+}
+.grade-tag:hover::before { left: 130%; }
+.grade-tag:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow:
+    0 6px 20px rgba(0,0,0,0.13),
+    0 2px 6px rgba(0,0,0,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.95),
+    inset 0 -1px 0 rgba(0,0,0,0.05);
+  background: linear-gradient(135deg,
+    rgba(255,255,255,0.75) 0%,
+    rgba(255,255,255,0.28) 50%,
+    rgba(255,255,255,0.45) 100%
+  );
+}
+.grade-tag:active { transform: translateY(0px) scale(0.98); }
+/* Gold glass for star tags */
+.grade-tag.star {
+  color: #5a3800;
+  background: linear-gradient(135deg,
+    rgba(212,175,100,0.75) 0%,
+    rgba(192,148,65,0.45) 50%,
+    rgba(218,185,115,0.65) 100%
+  );
+  border: 1px solid rgba(230,200,120,0.85);
+  box-shadow:
+    0 2px 8px rgba(160,100,0,0.18),
+    0 1px 2px rgba(160,100,0,0.10),
+    inset 0 1px 0 rgba(255,235,160,0.9),
+    inset 0 -1px 0 rgba(120,80,0,0.08);
+}
+.grade-tag.star:hover {
+  background: linear-gradient(135deg,
+    rgba(230,195,115,0.9) 0%,
+    rgba(210,168,80,0.65) 50%,
+    rgba(235,205,130,0.8) 100%
+  );
+}
 
 .academic-right { padding-top: 2rem; display: flex; flex-direction: column; gap: 3rem; }
 .academic-right p { font-size: 1.05rem; line-height: 1.8; color: var(--muted); }
@@ -248,6 +314,11 @@ nav {
 .work-item:hover::before { width: 100%; }
 .work-item > * { position: relative; z-index: 1; transition: color 0.3s; }
 .work-item:hover > * { color: var(--cream); }
+.work-item:hover .work-info p { color: rgba(244,240,230,0.82); }
+.work-item:hover .work-num { color: rgba(244,240,230,0.5); }
+.work-item:hover .work-info h3 { color: var(--cream); }
+.work-item:hover .work-info p { color: rgba(244,240,230,0.75); }
+.work-item:hover .work-tag { color: rgba(244,240,230,0.7); border-color: rgba(244,240,230,0.3); }
 .work-num { font-family: var(--display); font-size: 1.1rem; letter-spacing: 0.05em; color: var(--muted); }
 .work-info h3 { font-family: var(--serif); font-size: 1.9rem; font-weight: 400; line-height: 1.2; }
 .work-info h3 em { font-style: italic; }
@@ -402,6 +473,149 @@ footer p { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.05em; }
   footer { padding: 2rem; flex-direction: column; gap: 1rem; text-align: center; }
 }
 a, button { cursor: none; }
+
+/* ── Glitch-scramble quote block ── */
+.quote-block { position: relative; cursor: default; }
+.quote-block p { font-family: var(--serif); font-style: italic; font-size: 1.15rem; line-height: 1.7; color: var(--ink); }
+.quote-scramble-char { display: inline; transition: color 0.08s; }
+
+/* ── Black hover overlay on academic paragraphs ── */
+.academic-hover-p {
+  position: relative;
+  padding: 1rem 1.2rem;
+  border-radius: 6px;
+  transition: background 0.35s var(--ease), color 0.35s var(--ease);
+  cursor: default;
+}
+.academic-hover-p:hover {
+  background: #0a0a09;
+  color: #f4f0e6;
+}
+
+/* ── Mouse-shadow on all headings ── */
+.shadow-title {
+  position: relative;
+  display: inline-block;
+}
+
+/* ── Water ripple override: deeper blue tones ── */
+
+/* ── Hero desc typewriter ── */
+.hero-desc-animated .char {
+  opacity: 0;
+  display: inline;
+  animation: charIn 0.04s forwards;
+}
+@keyframes charIn { to { opacity: 1; } }
+
+/* ── Work item paragraph stagger ── */
+.work-info p.work-lead-p { opacity: 0; transform: translateY(12px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+.work-item.in-view .work-info p.work-lead-p { opacity: 1; transform: none; }
+.work-info .work-expanded p { /* already handled */ }
+
+
+/* ── Expandable paragraph ── */
+.work-expand-btn { opacity: 0; transform: translateY(8px); transition: opacity 0.5s var(--ease), transform 0.5s var(--ease), color 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent2);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: none;
+  transition: color 0.3s;
+}
+.work-expand-btn .btn-icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  line-height: 12px;
+  text-align: center;
+  font-size: 0.9rem;
+  transition: transform 0.4s var(--ease);
+}
+.work-expand-btn.open .btn-icon {
+  transform: rotate(45deg);
+}
+.work-item:hover .work-expand-btn { opacity: 0; transform: translateY(8px); transition: opacity 0.5s var(--ease), transform 0.5s var(--ease), color 0.3s; color: rgba(244,240,230,0.8); }
+
+.work-expanded {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.6s var(--ease), opacity 0.5s var(--ease), transform 0.5s var(--ease);
+  opacity: 0;
+  transform: translateY(-8px);
+}
+.work-expanded.open {
+  max-height: 300px;
+  opacity: 1;
+  transform: translateY(0);
+}
+.work-expanded p {
+  font-size: 0.88rem;
+  line-height: 1.85;
+  color: var(--muted);
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  margin-top: 0.8rem;
+}
+.work-item:hover .work-expanded p { color: rgba(244,240,230,0.75); }
+.work-item:hover .work-expanded { border-top-color: rgba(244,240,230,0.15); }
+
+
+/* ── Case study tidy layout ── */
+.work-item {
+  align-items: start;
+  padding: 3rem 2rem 3rem 0;
+}
+.work-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.work-info h3 {
+  margin-bottom: 0.2rem;
+}
+.work-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem 3rem;
+  margin-top: 0.6rem;
+}
+.work-body-single {
+  margin-top: 0.5rem;
+}
+.work-lead {
+  font-size: 0.95rem;
+  color: var(--muted);
+  line-height: 1.75;
+  font-weight: 400;
+  font-style: italic;
+  border-left: 2px solid var(--accent2);
+  padding-left: 1rem;
+}
+.work-detail {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.8;
+  font-weight: 300;
+}
+.work-item:hover .work-lead,
+.work-item:hover .work-detail {
+  color: rgba(244,240,230,0.75);
+}
+.work-item:hover .work-lead {
+  border-left-color: rgba(244,240,230,0.4);
+}
+
 
 /* ── Green highlight on key italic words ── */
 .section-title em,
@@ -684,8 +898,8 @@ h1.hero-title em {
   <a href="#hero" class="nav-logo">portfolio-sophiefr.com</a>
   <ul class="nav-links">
     <li><a href="#hero">Index</a></li>
-    <li><a href="#academic">Profile</a></li>
-    <li><a href="#work">Work</a></li>
+    <li><a href="#profile">Profile</a></li>
+    <li><a href="#work">Experience</a></li>
     <li><a href="#connect">Connect</a></li>
   </ul>
 </nav>
@@ -696,13 +910,15 @@ h1.hero-title em {
 
   <div class="hero-profile">
     <img src="c:\Users\Administrator\Pictures\Saved Pictures\Screenshot_20260528_210750_Gallery.webp" alt="Student portrait">
-    <div class="profile-caption">ISGR Candidate · 2026</div>
+    <div class="profile-caption">Sophie Nguyen Nhu Quynh · 2026</div>
   </div>
 
   <span class="hero-tag">Year 10 IGCSE · Malaysia → Sweden</span>
-  <h1 class="hero-title">International<br>Student &<br><em>Athlete.</em></h1>
+  <h1 class="hero-title shadow-title">International<br>Student &<br><em>Athlete.</em></h1>
   <div class="hero-sub-row">
-    <p class="hero-desc">Preparing to enter the IB Diploma Programme at the International School of the Gothenburg Region — driven by science, community, and stage.</p>
+    <p class="hero-desc" id="heroDesc">A portfolio of myself. Achivements and passion.
+      I am a vietnamese living abroad in Malaysia, in high-end city of Kuala Lumpur. My goal is to travel the world, learn new things and help the world a better place to live. 
+      I love cooking, baking, drawing and designing-noble activities that sharpen my mental skills and relieve stress.</p>
     <div class="hero-scroll-hint"><div class="scroll-line"></div>Scroll</div>
   </div>
 </section>
@@ -711,22 +927,22 @@ h1.hero-title em {
 <section id="academic">
   <div class="academic-left reveal">
     <span class="section-label">01 / Academic Profile</span>
-    <h2 class="split-text">Built on <em>Curiosity</em><br>& Discipline</h2>
+    <h2 class="split-text shadow-title">Built on <em>Curiosity</em><br>& Discipline</h2>
     <div class="grade-tags reveal-children">
-      <span class="grade-tag star">A business</span>
-      <span class="grade-tag star">A Humanities</span>
-      <span class="grade-tag">Core Subjects</span>
-      <span class="grade-tag">Critical Writing</span>
-      <span class="grade-tag">Research</span>
-      <span class="grade-tag">Group Dynamics</span>
+      <span class="grade-tag star">Inquirer</span>
+      <span class="grade-tag star">Reflective</span>
+      <span class="grade-tag">Caring</span>
+      <span class="grade-tag">Open-Minded</span>
+      <span class="grade-tag">Communicator</span>
+      <span class="grade-tag">Risk-Taker</span>
     </div>
   </div>
   <div class="academic-right reveal reveal-delay-2">
-    <p>Operating within an international educational climate, I maintain consistent A* and A grades across Core Sciences and Humanities while building skills in structured analysis and collaborative research.</p>
-    <div class="quote-block">
-      <p>"While my strengths track definitively into Humanities and Sciences, Mathematics presented a profound conceptual hurdle this past term. Adhering to the IB Learner Profile of being Reflective, I am actively using disciplined study frameworks to normalize my foundational math metrics."</p>
+    <p class="academic-hover-p" id="p-diverse community">I study in a diverse community. Maintaing score A grades across ICT and social sciences, and contribute to school activities.</p>
+    <div class="quote-block" id="scrambleQuote">
+      <p>"While I excel in humanities and social science subjects, Mathematics present as my struggle. I have chosen to study actively by solving math questions everyday to improve."</p>
     </div>
-    <p>True academic integrity means acknowledging areas of friction and addressing them systematically — a principle I carry into every discipline.</p>
+    <p class="academic-hover-p" id="p-discipline">I show my principle in discipline-the commitment to consistently show up and do the work, even when you don't feel like it. </p>
   </div>
 </section>
 
@@ -735,7 +951,7 @@ h1.hero-title em {
   <div class="work-header reveal">
     <div>
       <span class="section-label">02 / Case Studies</span>
-      <h2 class="split-text">Core Competencies<br>& <em>Impact</em></h2>
+      <h2 class="split-text shadow-title">Core Competencies<br>& <em>Impact</em></h2>
     </div>
     <span class="work-count" aria-hidden="true">05</span>
   </div>
@@ -743,32 +959,40 @@ h1.hero-title em {
     <a class="work-item reveal" href="#work" data-img="c:\Users\Administrator\Pictures\Saved Pictures\IMG_20260530_154754.webp">
       <span class="work-num">01</span>
       <div class="work-info">
-        <h3>Athletic <em>Resilience</em></h3>
-        <p>Multiple 1st-place finishes on school sports day — medals earned through unmitigated failure, refinement, and the encouragement of teammates.</p>
+        <h3>Sportsmanship <em>athletic activity</em></h3>
+        <p>Multiple extraordinary Achivements on school sports day-through failures and encouragement of friends and teachers.</p>
+        <button class="work-expand-btn" onclick="toggleExpand(this);event.preventDefault()"><span class="btn-icon">+</span> Read more</button>
+        <div class="work-expanded"><p>I have always been terrified of exposing myself to a new environment and unexpected changes, yet I somehow found myself winning medals and achieving multiple 1st-place finishes on school sports day. It led me to believe that the most valuable lessons in life are learned not in the classroom, but through spectacular, unmitigated failure in tracks and short-distance sprints. However, I never could have done this without the wonderful encouragement of my friends and caring teachers.</p></div>
       </div>
-      <span class="work-tag">Resilience</span>
+      <span class="work-tag">Risk-taker</span>
     </a>
     <a class="work-item reveal reveal-delay-1" href="#work" data-img="c:\Users\Administrator\Pictures\Saved Pictures\Screenshot_20260528_212202_Gallery (1).webp">
       <span class="work-num">02</span>
       <div class="work-info">
-        <h3>Community Support<br>& <em>NGO Engagement</em></h3>
-        <p>Volunteering in a local Malaysian orphanage — caring for disabled patients and learning radical empathy from firsthand experience.</p>
+        <h3>Local community Support<br>& <em>NGO volunteering</em></h3>
+        <p>Volunteering in a local Malaysian orphanage — caring for disabled patients and learning compassion from firsthand experience.</p>
+        <button class="work-expand-btn" onclick="toggleExpand(this);event.preventDefault()"><span class="btn-icon">+</span> Read more</button>
+        <div class="work-expanded"><p>It had taught me to put myself in another person's shoes — and clearly, it made me realize how lucky I was. Not only did I spend hours taking care of disabled people, but I was also diligently wiping every corner of the patients' beds, grooming and crooning to them, and cleaning the whole place. It was very hard work. However, I was glad that I could help them and make them feel at home.</p></div>
       </div>
       <span class="work-tag">Caring</span>
     </a>
     <a class="work-item reveal reveal-delay-2" href="#work" data-img="c:\Users\Administrator\Pictures\Saved Pictures\20250518_171912.webp">
       <span class="work-num">03</span>
       <div class="work-info">
-        <h3>Institutional <em>Representation</em></h3>
-        <p>School fair exhibitor — discovering that leadership lives in presence and listening, not volume.</p>
+        <h3>Exhibitor <em>School fair</em></h3>
+        <p>School fair exhibitor, discovering that leadership lives in presence and listening, not volume.</p>
+        <button class="work-expand-btn" onclick="toggleExpand(this);event.preventDefault()"><span class="btn-icon">+</span> Read more</button>
+        <div class="work-expanded"><p>The smell of fresh-printed flyers and the echoing sound of people talking always reminds me of the day I went to represent my school as an exhibitor at a School Fair. As an observant person, it allowed me to bridge my nature with my desire to engage with people. It took me years to realize that you don't have to be the loudest person in the room to be a leader — the most effective leaders listen attentively and respond thoughtfully.</p></div>
       </div>
-      <span class="work-tag">Public Speaking</span>
+      <span class="work-tag">Communicator</span>
     </a>
     <a class="work-item reveal reveal-delay-1" href="#work" data-img="c:\Users\Administrator\Pictures\Saved Pictures\Screenshot_20260528_191607_Gallery (1).webp">
       <span class="work-num">04</span>
       <div class="work-info">
-        <h3>Creative Arts &<br><em>Live Performance</em></h3>
-        <p>Stage performer with the MVFA organization — building confidence through creative dedication and working under pressure.</p>
+        <h3>Cultural exchange &<br><em>Live Performance</em></h3>
+        <p>Stage performer with the MVFA organization — building confidence through hardwork and coordination</p>
+        <button class="work-expand-btn" onclick="toggleExpand(this);event.preventDefault()"><span class="btn-icon">+</span> Read more</button>
+        <div class="work-expanded"><p>I have always been a shy person, but I found myself on stage performing in front of a large audience as a member of the MVFA organization. It was daunting at first, but it taught me the importance of stepping out of my comfort zone and embracing new challenges. Through countless rehearsals and performances, I developed a newfound confidence in myself and my ability to connect with others through the arts.</p></div>
       </div>
       <span class="work-tag">Teamwork</span>
     </a>
@@ -776,7 +1000,9 @@ h1.hero-title em {
       <span class="work-num">05</span>
       <div class="work-info">
         <h3>Acting <em>on Stage</em></h3>
-        <p>Developing voice control, body language, and the discipline to inhabit a character fully before an audience.</p>
+        <p>Learning voice control, body language to master a character infront of big audience.</p>
+        <button class="work-expand-btn" onclick="toggleExpand(this);event.preventDefault()"><span class="btn-icon">+</span> Read more</button>
+        <div class="work-expanded"><p>Acting on stage has been a transformative experience —it have allowed me to develop my voice, body language, and confidence in my character. Throughout countless rehearsals and performances, I have learned to channel my emotions and connect with others on a deeper level. This experience enhanced my confidence and taught me the value of empathy in both personal and professional relationships.</p></div>
       </div>
       <span class="work-tag">Confidence</span>
     </a>
@@ -787,8 +1013,8 @@ h1.hero-title em {
 <section id="connect">
   <div class="reveal">
     <span class="section-label">03 / Digital Networks</span>
-    <h2 class="split-text">Let's <em>Connect</em></h2>
-    <p class="connect-note">Available for correspondence, collaborations, and school network building ahead of ISGR enrollment.</p>
+    <h2 class="split-text shadow-title">Let's <em>Connect</em></h2>
+    <p class="connect-note">Always available for collaborations, connections and school network building.</p>
   </div>
   <div class="social-list reveal reveal-delay-1">
     <a href="https://www.linkedin.com/in/sophie-nguyen-806175408" class="social-row" target="_blank">
@@ -804,9 +1030,9 @@ h1.hero-title em {
 </section>
 
 <footer>
-  <p>© 2026 — IB Candidate Portfolio</p>
-  <span class="footer-logo" aria-hidden="true">ISGR</span>
-  <p>Designed with intent.</p>
+  <p>© 2026 — Portfolio</p>
+  <span class="footer-logo" aria-hidden="true">Sophie.fr</span>
+  <p>*</p>
 </footer>
 
 <script>
@@ -1254,90 +1480,112 @@ window.addEventListener('scroll', () => {
 })();
 
 
-// ══ WATER RIPPLE EFFECT ══
+// ══ REALISTIC WATER RIPPLE — displacement + refraction style ══
 (function() {
-  const rippleCanvas = document.getElementById('rippleCanvas');
-  const rc = rippleCanvas.getContext('2d');
-
-  function resize() {
-    rippleCanvas.width = window.innerWidth;
-    rippleCanvas.height = window.innerHeight;
-  }
+  const cv = document.getElementById('rippleCanvas');
+  const rc = cv.getContext('2d');
+  function resize() { cv.width = window.innerWidth; cv.height = window.innerHeight; }
   resize();
   window.addEventListener('resize', resize);
 
-  const ripples = [];
+  // Each ripple ring has a bright leading edge and dark trailing edge (real water physics)
+  const rings = [];
 
-  function spawnRipple(x, y, isClick) {
-    const count = isClick ? 4 : 1;
+  function spawnRings(x, y, isClick) {
+    const count = isClick ? 7 : 1;
     for (let i = 0; i < count; i++) {
-      ripples.push({
+      const isFirst = i === 0;
+      rings.push({
         x, y,
-        r: isClick ? Math.random() * 8 : 0,
-        maxR: isClick ? 80 + Math.random() * 80 : 35 + Math.random() * 25,
-        speed: isClick ? 2.2 + Math.random() * 1.4 : 0.9 + Math.random() * 0.5,
-        alpha: isClick ? 0.55 : 0.3,
-        lineWidth: isClick ? 1.8 : 1.0,
-        hue: isClick ? 160 + Math.random() * 40 : 140 + Math.random() * 50,
-        delay: i * 80,
+        r: isClick ? i * 5 : 0,
+        maxR: isClick ? 40 + i * 30 : 22 + Math.random() * 14,
+        speed: isClick ? 2.8 + i * 0.35 : 1.1 + Math.random() * 0.5,
+        // real water: sharp bright leading edge, wide dark trailing zone
+        alpha: isClick ? (0.85 - i * 0.08) : 0.28,
+        width: isClick ? (3.5 - i * 0.3) : 1.2,
+        delay: i * 40,
         born: performance.now(),
+        isClick,
+      });
+    }
+    // One large slow surface ring
+    if (isClick) {
+      rings.push({
+        x, y, r: 0, maxR: 260, speed: 4.2,
+        alpha: 0.12, width: 0.8,
+        delay: 0, born: performance.now(), isClick: true,
       });
     }
   }
 
-  // Mouse move — gentle ripples
   let lastMove = 0;
   document.addEventListener('mousemove', e => {
     const now = performance.now();
-    if (now - lastMove > 80) {
-      spawnRipple(e.clientX, e.clientY, false);
-      lastMove = now;
-    }
+    if (now - lastMove > 75) { spawnRings(e.clientX, e.clientY, false); lastMove = now; }
   });
-
-  // Click — burst of ripples
-  document.addEventListener('click', e => {
-    spawnRipple(e.clientX, e.clientY, true);
-  });
+  document.addEventListener('click', e => spawnRings(e.clientX, e.clientY, true));
   document.addEventListener('touchstart', e => {
-    const t = e.touches[0];
-    spawnRipple(t.clientX, t.clientY, true);
-  }, { passive: true });
+    const t = e.touches[0]; spawnRings(t.clientX, t.clientY, true);
+  }, {passive:true});
+
+  function drawRing(rp, progress) {
+    const alpha = rp.alpha * Math.pow(1 - progress, 1.8);
+    if (alpha < 0.003) return;
+
+    // ── Real water ring: built from arc segments with gradient along radius ──
+    // Outer bright edge (crest of wave)
+    const crW = rp.width * 0.3;
+    rc.beginPath();
+    rc.arc(rp.x, rp.y, rp.r, 0, Math.PI * 2);
+    rc.strokeStyle = `rgba(210, 235, 255, ${alpha * 0.9})`;
+    rc.lineWidth = crW;
+    rc.stroke();
+
+    // Dark trough just inside crest
+    rc.beginPath();
+    rc.arc(rp.x, rp.y, Math.max(1, rp.r - crW * 1.5), 0, Math.PI * 2);
+    rc.strokeStyle = `rgba(10, 40, 80, ${alpha * 0.45})`;
+    rc.lineWidth = rp.width * 0.5;
+    rc.stroke();
+
+    // Main body — wide translucent blue band
+    rc.beginPath();
+    rc.arc(rp.x, rp.y, Math.max(1, rp.r - crW * 0.5), 0, Math.PI * 2);
+    rc.strokeStyle = `rgba(80, 160, 220, ${alpha * 0.35})`;
+    rc.lineWidth = rp.width * 1.8;
+    rc.stroke();
+
+    // Inner fade shadow (trailing edge)
+    if (rp.r > 8) {
+      rc.beginPath();
+      rc.arc(rp.x, rp.y, Math.max(1, rp.r - rp.width * 2), 0, Math.PI * 2);
+      rc.strokeStyle = `rgba(0, 20, 60, ${alpha * 0.18})`;
+      rc.lineWidth = rp.width * 2.5;
+      rc.stroke();
+    }
+
+    // Specular highlight — bright white dot at top of ring (light source sim)
+    if (rp.isClick && rp.r > 6) {
+      rc.beginPath();
+      rc.arc(rp.x, rp.y, rp.r, -Math.PI * 0.55, -Math.PI * 0.45);
+      rc.strokeStyle = `rgba(255, 255, 255, ${alpha * 0.7})`;
+      rc.lineWidth = crW * 1.2;
+      rc.stroke();
+    }
+  }
 
   function animRipples() {
-    rc.clearRect(0, 0, rippleCanvas.width, rippleCanvas.height);
+    rc.clearRect(0, 0, cv.width, cv.height);
     const now = performance.now();
-
-    for (let i = ripples.length - 1; i >= 0; i--) {
-      const rp = ripples[i];
+    for (let i = rings.length - 1; i >= 0; i--) {
+      const rp = rings[i];
       const age = now - rp.born - rp.delay;
       if (age < 0) continue;
-
       rp.r += rp.speed;
       const progress = rp.r / rp.maxR;
-      const alpha = rp.alpha * (1 - progress) * (1 - progress);
-
-      if (alpha <= 0.004 || rp.r >= rp.maxR) {
-        ripples.splice(i, 1);
-        continue;
-      }
-
-      rc.beginPath();
-      rc.arc(rp.x, rp.y, rp.r, 0, Math.PI * 2);
-      rc.strokeStyle = `hsla(${rp.hue}, 55%, 62%, ${alpha})`;
-      rc.lineWidth = rp.lineWidth * (1 - progress * 0.5);
-      rc.stroke();
-
-      // Inner shimmer ring for clicks
-      if (rp.r > 12 && rp.maxR > 60) {
-        rc.beginPath();
-        rc.arc(rp.x, rp.y, rp.r * 0.55, 0, Math.PI * 2);
-        rc.strokeStyle = `hsla(${rp.hue + 20}, 65%, 75%, ${alpha * 0.5})`;
-        rc.lineWidth = rp.lineWidth * 0.6;
-        rc.stroke();
-      }
+      if (progress >= 1) { rings.splice(i, 1); continue; }
+      drawRing(rp, progress);
     }
-
     requestAnimationFrame(animRipples);
   }
   animRipples();
@@ -1392,6 +1640,133 @@ window.addEventListener('scroll', () => {
   }
 
   animBranches();
+})();
+
+
+// ── Expand/collapse work paragraphs ──
+function toggleExpand(btn) {
+  const expanded = btn.nextElementSibling;
+  const isOpen = expanded.classList.contains('open');
+  btn.classList.toggle('open', !isOpen);
+  expanded.classList.toggle('open', !isOpen);
+  btn.querySelector('.btn-icon').textContent = isOpen ? '+' : '×';
+}
+
+
+// ══ SCRAMBLE EFFECT on quote block ══
+(function() {
+  const block = document.getElementById('scrambleQuote');
+  if (!block) return;
+  const p = block.querySelector('p');
+  const original = p.textContent;
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*?';
+  let scrambleInterval = null;
+  let revealed = 0;
+  let isScrambling = false;
+
+  function scramble() {
+    if (isScrambling) return;
+    isScrambling = true;
+    revealed = 0;
+    const len = original.length;
+    scrambleInterval = setInterval(() => {
+      let display = '';
+      for (let i = 0; i < len; i++) {
+        if (original[i] === ' ' || original[i] === '"' || original[i] === '.' || original[i] === ',') {
+          display += original[i];
+        } else if (i < revealed) {
+          display += original[i];
+        } else {
+          display += chars[Math.floor(Math.random() * chars.length)];
+        }
+      }
+      p.textContent = display;
+      revealed += 4;  // faster reveal per tick
+      if (revealed >= len) {
+        clearInterval(scrambleInterval);
+        p.textContent = original;
+        isScrambling = false;
+      }
+    }, 16);  // 60fps tick
+  }
+
+  block.addEventListener('mouseenter', () => {
+    if (scrambleInterval) clearInterval(scrambleInterval);
+    isScrambling = false;
+    scramble();
+  });
+})();
+
+// ══ MOUSE-SHADOW on headings ══
+(function() {
+  let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+  function updateShadows() {
+    document.querySelectorAll('.shadow-title').forEach(el => {
+      const rect = el.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      // Shadow cast BEHIND (opposite to mouse direction)
+      const dx = (mx - cx) * 0.018;
+      const dy = (my - cy) * 0.018;
+      // Use text-shadow — multiple layers for depth, all pushed away from cursor
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      const intensity = Math.min(dist / 8, 1);
+      el.style.textShadow = [
+        `${dx * 0.5}px ${dy * 0.5}px 4px rgba(0,0,0,${0.12 * intensity})`,
+        `${dx * 1.0}px ${dy * 1.0}px 10px rgba(0,0,0,${0.10 * intensity})`,
+        `${dx * 1.8}px ${dy * 1.8}px 20px rgba(0,0,0,${0.08 * intensity})`,
+        `${dx * 2.5}px ${dy * 2.5}px 35px rgba(0,0,0,${0.05 * intensity})`,
+      ].join(', ');
+    });
+    requestAnimationFrame(updateShadows);
+  }
+  updateShadows();
+})();
+
+// ══ HERO DESC — fade-in by character on load ══
+(function() {
+  const el = document.getElementById('heroDesc');
+  if (!el) return;
+  const text = el.textContent;
+  el.textContent = '';
+  el.style.opacity = '1';
+  let i = 0;
+  function next() {
+    if (i >= text.length) return;
+    el.textContent += text[i];
+    i++;
+    setTimeout(next, 18 + Math.random() * 12);
+  }
+  // Start after hero animation delay
+  setTimeout(next, 1400);
+})();
+
+// ══ WORK ITEM paragraph slide-in on scroll ══
+(function() {
+  const workObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const p = e.target.querySelector('.work-lead-p');
+        if (p) {
+          setTimeout(() => {
+            p.style.opacity = '1';
+            p.style.transform = 'none';
+          }, 180);
+        }
+        const btn = e.target.querySelector('.work-expand-btn');
+        if (btn) {
+          setTimeout(() => {
+            btn.style.opacity = '1';
+            btn.style.transform = 'none';
+          }, 320);
+        }
+        workObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.work-item').forEach(el => workObs.observe(el));
 })();
 
 </script>
